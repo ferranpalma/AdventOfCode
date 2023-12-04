@@ -1,1 +1,0 @@
-/Users/ferranpalmacomas/Desktop/AdventOfCode/rust2023/target/debug/librust2023.rlib: /Users/ferranpalmacomas/Desktop/AdventOfCode/rust2023/src/day01.rs /Users/ferranpalmacomas/Desktop/AdventOfCode/rust2023/src/lib.rs
