@@ -3,6 +3,7 @@ struct Game {
     id: u32,
     record: Vec<Color>,
     possible: bool,
+    minimums: (u32, u32, u32),
 }
 
 #[derive(Debug)]
@@ -25,6 +26,7 @@ pub fn run(data: &str) {
             let id = game_id.parse().unwrap();
             let mut record: Vec<Color> = Vec::new();
             let mut possible = true;
+            let mut minimums = (0, 0, 0);
             for actions in game.split(';') {
                 for action in actions.split(',') {
                     let (n, color) = action.trim_start_matches(" ").split_once(' ').unwrap();
@@ -34,18 +36,21 @@ pub fn run(data: &str) {
                             if possible {
                                 possible = n <= MAX_RED;
                             }
+                            minimums.0 = minimums.0.max(n);
                             Color::Red(n)
                         }
                         b'g' => {
                             if possible {
                                 possible = n <= MAX_GREEN;
                             }
+                            minimums.1 = minimums.1.max(n);
                             Color::Green(n)
                         }
                         b'b' => {
                             if possible {
                                 possible = n <= MAX_BLUE;
                             }
+                            minimums.2 = minimums.2.max(n);
                             Color::Blue(n)
                         }
                         _ => panic!("Unknown color"),
@@ -57,6 +62,7 @@ pub fn run(data: &str) {
                 id,
                 record,
                 possible,
+                minimums,
             }
         })
         .collect();
@@ -66,6 +72,10 @@ pub fn run(data: &str) {
         .filter(|game| game.possible)
         .map(|game| game.id)
         .sum();
+    let result_p2: u32 = parsed_data
+        .iter()
+        .map(|game| game.minimums.0 * game.minimums.1 * game.minimums.2)
+        .sum();
 
-    println!("{:?}", result);
+    println!("{:?}", result_p2);
 }
