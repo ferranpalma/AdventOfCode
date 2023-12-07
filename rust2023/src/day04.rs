@@ -1,5 +1,11 @@
 use std::collections::HashMap;
 
+struct P2 {
+    card_number: i32,
+    matches: i32,
+    repetitions: i32,
+}
+
 fn parse_to_vec(s: &str) -> Vec<i32> {
     let result: Vec<i32> = s
         .split_whitespace()
@@ -11,6 +17,8 @@ fn parse_to_vec(s: &str) -> Vec<i32> {
 pub fn run(data: &str) {
     let mut winning_numbers: HashMap<i32, Vec<i32>> = HashMap::new();
     let mut elf_numbers: HashMap<i32, HashMap<i32, i32>> = HashMap::new();
+
+    // Part 1
 
     let game_matches: Vec<i32> = data
         .lines()
@@ -50,5 +58,34 @@ pub fn run(data: &str) {
         .filter(|x| **x > 0)
         .map(|x| 2_u32.pow((x - 1) as u32))
         .sum();
+
     println!("{}", result);
+
+    // Part 2
+
+    let mut count = vec![1 as usize; data.lines().count()];
+
+    for (index, matches) in game_matches.iter().enumerate() {
+        let matches = *matches as usize;
+        if matches == 0 {
+            continue;
+        }
+
+        let instances = count[index];
+        let new_instances = instances * matches;
+
+        let final_card = if index + matches > count.len() {
+            count.len() - 1
+        } else {
+            index + matches
+        };
+
+        for j in index + 1..=final_card {
+            count[j] += instances;
+        }
+    }
+
+    let result: usize = count.iter().sum();
+
+    println!("Part 2: {}", result);
 }
